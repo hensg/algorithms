@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.16)
+project(array_inversion_count)
+
+set(CMAKE_CXX_STANDARD 14)
+
+add_executable(array_inversion_count main.cpp nested_loop_inversion_counter.cpp nested_loop_inversion_counter.h merge_sort_inversion_count.cpp merge_sort_inversion_count.h)
