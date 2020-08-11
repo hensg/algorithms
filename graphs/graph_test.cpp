@@ -62,18 +62,36 @@ void test_direct_graph() {
 }
 
 void test_topological_sort(Graph& g) {
-    std::vector<std::string> topo = g.topological_sort();
-    std::cout << topo[0];
-    assert(topo[0] == "0:s");
+    /*      v
+          /    \
+        s       t
+          \    /
+            w
+    s -> v | w -> t  (0:s, 1:v, 2:w, 3:t)
+    s -> w | v -> t  (0:s, 1:w, 2:v, 3:t)
+    two possible topological orders
+    */
+    std::pair<std::vector<vertex_t>, std::vector<connected_components_t>> topo = g.topological_sort();
+    for (int i = 0; i < topo.first.size(); i++) {
+        std::cout << std::to_string(i) << ":" << topo.first[i].label << ", ";
+    }
+
+    assert(topo.first[0].label == "s");
+    assert(topo.first[1].label == "v");
+    assert(topo.first[2].label == "w");
+    assert(topo.first[3].label == "t");
+
+    std::cout << "Num of CC: " << topo.second.size() << ", ";
+    assert(topo.second.size() == 1);//1 cc
 }
 
 void test_undirect_graph() {
     bool direct_graph = true;
     Graph g(direct_graph);
-    g.addVertex(vertex("s"));    
-    g.addVertex(vertex("v"));    
-    g.addVertex(vertex("w"));    
-    g.addVertex(vertex("t"));    
+    g.addVertex(vertex{"s"});
+    g.addVertex(vertex{"v"});
+    g.addVertex(vertex{"w"});
+    g.addVertex(vertex{"t"});
     g.addEdge(0, 1);//s->v
     g.addEdge(0, 2);//s->w
     g.addEdge(1, 3);//v->t
