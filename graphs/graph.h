@@ -28,10 +28,11 @@ public:
     }
     void addVertex(vertex_t v);
     void addEdge(int a_index, int b_index);
+    const std::vector<vertex_t>& get_vertices();
     std::vector<std::pair<vertex_t, int>> find_bfs(const unsigned int starting_index, const std::string label);
-    std::vector<connected_components_t> unique_connected_components();
+    std::vector<connected_components_t> undirect_connected_components();
     std::vector<std::pair<vertex_t, int>> find_dfs(const unsigned int starting_index, const std::string label);
-    std::pair<std::vector<vertex_t>, std::vector<connected_components_t>> topological_sort();
+    std::vector<int> topological_sort();
     void print();
 };
 

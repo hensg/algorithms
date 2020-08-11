@@ -9,7 +9,7 @@ void test_bfs_distance(Graph& graph) {
 }
 
 void test_ucc(Graph& graph) {
-    std::vector<connected_components_t> cc_vec = graph.unique_connected_components();
+    std::vector<connected_components_t> cc_vec = graph.undirect_connected_components();
     assert(cc_vec.size() == 1);
 }
 
@@ -57,7 +57,7 @@ void test_direct_graph() {
     graph2.addEdge(5, 7);//cc3
     graph2.addEdge(5, 9);//cc3
 
-    assert(graph2.unique_connected_components().size() == 3);
+    assert(graph2.undirect_connected_components().size() == 3);
 
 }
 
@@ -71,18 +71,15 @@ void test_topological_sort(Graph& g) {
     s -> w | v -> t  (0:s, 1:w, 2:v, 3:t)
     two possible topological orders
     */
-    std::pair<std::vector<vertex_t>, std::vector<connected_components_t>> topo = g.topological_sort();
-    for (int i = 0; i < topo.first.size(); i++) {
-        std::cout << std::to_string(i) << ":" << topo.first[i].label << ", ";
+    std::vector<int> topo = g.topological_sort();
+    for (int i = 0; i < topo.size(); i++) {
+        std::cout << std::to_string(i) << ":" << g.get_vertices()[topo[i]].label << ", ";
     }
 
-    assert(topo.first[0].label == "s");
-    assert(topo.first[1].label == "v");
-    assert(topo.first[2].label == "w");
-    assert(topo.first[3].label == "t");
-
-    std::cout << "Num of CC: " << topo.second.size() << ", ";
-    assert(topo.second.size() == 1);//1 cc
+    assert(g.get_vertices()[topo[0]].label == "s");
+    assert(g.get_vertices()[topo[1]].label == "v");
+    assert(g.get_vertices()[topo[2]].label == "w");
+    assert(g.get_vertices()[topo[3]].label == "t");
 }
 
 void test_undirect_graph() {

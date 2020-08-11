@@ -15,6 +15,10 @@ void Graph::addEdge(int a_index, int b_index) {
         vertices[b_index].edges.push_back(a_index);
 };
 
+const std::vector<vertex_t>& Graph::get_vertices() {
+    return vertices;
+};
+
 std::vector<std::pair<vertex_t, int>> Graph::find_bfs(const unsigned int starting_index, const std::string label) {
     std::vector<std::pair<vertex_t, int>> vertices_found;
     std::set<int> explored;
@@ -43,7 +47,7 @@ std::vector<std::pair<vertex_t, int>> Graph::find_bfs(const unsigned int startin
     return vertices_found;
 }
 
-std::vector<connected_components_t> Graph::unique_connected_components() {
+std::vector<connected_components_t> Graph::undirect_connected_components() {
     std::vector<connected_components_t> cc_vector;
 
     std::vector<bool> explored(vertices.size());
@@ -98,9 +102,8 @@ std::vector<std::pair<vertex_t, int>> Graph::find_dfs(const unsigned int startin
     return vec;
 }
 
-std::pair<std::vector<vertex_t>, std::vector<connected_components_t>> Graph::topological_sort() {
-    std::vector<connected_components_t> connected_components;
-    std::vector<vertex_t> topo_sort_vec(vertices.size());
+std::vector<int> Graph::topological_sort() {
+    std::vector<int> topo_sort_vec(vertices.size());
     std::vector<int> explored(topo_sort_vec.size());
     std::stack<int> stack;
 
@@ -108,15 +111,11 @@ std::pair<std::vector<vertex_t>, std::vector<connected_components_t>> Graph::top
 
     for (int i = 0; i < vertices.size(); i++) {
         if (!explored[i]) {
-            connected_components_t cc{++numCCs};
-            connected_components.push_back(cc);
             stack.push(i);
             while (!stack.empty()) {
                 j = stack.top();
                 if (!explored[j]) {
                     explored[j] = true;
-                    cc.vertices.push_back(vertices[i]);
-
                     for (auto& edge: vertices[j].edges) {
                         if (!explored[edge])
                             stack.push(edge);
@@ -124,12 +123,12 @@ std::pair<std::vector<vertex_t>, std::vector<connected_components_t>> Graph::top
                 } else {
                     stack.pop(); //pop stack only after completely expanded a path
                     if (currPos > 0)
-                        topo_sort_vec[--currPos] = vertices[j];
+                        topo_sort_vec[--currPos] = j;
                 }
             }
         }
     }
-    return std::pair<std::vector<vertex_t>, std::vector<connected_components_t>>(topo_sort_vec, connected_components);
+    return topo_sort_vec;
 }
 
 void Graph::print() {
