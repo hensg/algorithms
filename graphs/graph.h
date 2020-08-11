@@ -7,9 +7,6 @@
 struct vertex {
     std::string label;
     std::vector<int> edges;
-    vertex(std::string _label) {
-        label = _label;
-    }
 };
 typedef vertex vertex_t;
 
@@ -31,10 +28,10 @@ public:
     }
     void addVertex(vertex_t v);
     void addEdge(int a_index, int b_index);
-    std::vector<std::pair<vertex_t, int>> find_bfs(const int starting_index, const std::string label);
-    std::vector<connected_components_t> ucc();
-    std::vector<std::pair<vertex_t, int>> find_dfs(const int starting_index, const std::string label);
-    std::vector<std::string> topological_sort();
+    std::vector<std::pair<vertex_t, int>> find_bfs(const unsigned int starting_index, const std::string label);
+    std::vector<connected_components_t> unique_connected_components();
+    std::vector<std::pair<vertex_t, int>> find_dfs(const unsigned int starting_index, const std::string label);
+    std::pair<std::vector<vertex_t>, std::vector<connected_components_t>> topological_sort();
     void print();
 };
 

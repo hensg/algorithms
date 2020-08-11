@@ -15,7 +15,7 @@ void Graph::addEdge(int a_index, int b_index) {
         vertices[b_index].edges.push_back(a_index);
 };
 
-std::vector<std::pair<vertex_t, int>> Graph::find_bfs(const int starting_index, const std::string label) {
+std::vector<std::pair<vertex_t, int>> Graph::find_bfs(const unsigned int starting_index, const std::string label) {
     std::vector<std::pair<vertex_t, int>> vertices_found;
     std::set<int> explored;
 
@@ -43,17 +43,17 @@ std::vector<std::pair<vertex_t, int>> Graph::find_bfs(const int starting_index, 
     return vertices_found;
 }
 
-std::vector<connected_components_t> Graph::ucc() {
+std::vector<connected_components_t> Graph::unique_connected_components() {
     std::vector<connected_components_t> cc_vector;
 
     std::vector<bool> explored(vertices.size());
     std::queue<int> q;
 
+    int numCCs = 0;
     for (int i = 0; i < vertices.size(); i++) {
         if (!explored[i]) {
-            connected_components_t cc;
+            connected_components_t cc{++numCCs};
             cc_vector.push_back(cc);
-            cc.id = i+1;
             q.push(i);
 
             while (!q.empty()) {
@@ -71,7 +71,7 @@ std::vector<connected_components_t> Graph::ucc() {
     return cc_vector;
 }
 
-std::vector<std::pair<vertex_t, int>> Graph::find_dfs(const int starting_index, const std::string label) {
+std::vector<std::pair<vertex_t, int>> Graph::find_dfs(const unsigned int starting_index, const std::string label) {
     std::vector<std::pair<vertex_t, int>> vec;
     std::vector<bool> explored(vertices.size());
     std::vector<int> distance(vertices.size());

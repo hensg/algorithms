@@ -9,7 +9,7 @@ void test_bfs_distance(Graph& graph) {
 }
 
 void test_ucc(Graph& graph) {
-    std::vector<connected_components_t> cc_vec = graph.ucc();
+    std::vector<connected_components_t> cc_vec = graph.unique_connected_components();
     assert(cc_vec.size() == 1);
 }
 
@@ -23,12 +23,12 @@ void test_dfs_distance(Graph& graph) {
 void test_direct_graph() {
     bool direct_graph = false;
     Graph graph(direct_graph);
-    graph.addVertex(vertex("s")); //0
-    graph.addVertex(vertex("a")); //1
-    graph.addVertex(vertex("b")); //2
-    graph.addVertex(vertex("c")); //3
-    graph.addVertex(vertex("d")); //4
-    graph.addVertex(vertex("e")); //5
+    graph.addVertex(vertex{"s"}); //0
+    graph.addVertex(vertex{"a"}); //1
+    graph.addVertex(vertex{"b"}); //2
+    graph.addVertex(vertex{"c"}); //3
+    graph.addVertex(vertex{"d"}); //4
+    graph.addVertex(vertex{"e"}); //5
     graph.addEdge(0, 1);
     graph.addEdge(0, 2);
     graph.addEdge(1, 3);
@@ -39,8 +39,26 @@ void test_direct_graph() {
     graph.print();
 
     test_bfs_distance(graph);
-    test_ucc(graph);
     test_dfs_distance(graph);
+
+    test_ucc(graph);
+    Graph graph2(direct_graph);
+    for (int i = 0; i < 10; i++) {
+        graph2.addVertex(vertex{std::to_string(i)});
+    }
+    graph2.addEdge(0, 2);//cc1
+    graph2.addEdge(0, 4);//cc1
+    graph2.addEdge(2, 4);//cc1
+    graph2.addEdge(4, 6);//cc1
+    graph2.addEdge(4, 8);//cc1
+
+    graph2.addEdge(1, 3);//cc2
+
+    graph2.addEdge(5, 7);//cc3
+    graph2.addEdge(5, 9);//cc3
+
+    assert(graph2.unique_connected_components().size() == 3);
+
 }
 
 void test_topological_sort(Graph& g) {
