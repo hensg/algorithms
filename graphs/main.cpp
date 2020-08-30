@@ -2,11 +2,15 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include "median_maintainer.cpp"
 #include "graph.h"
+#include "heap.h"
+#include "binary_search_tree.h"
+#include "hash_set.h"
 
 bool compare_by_size(connected_components_t a, connected_components_t b) { return a.vertices.size() > b.vertices.size(); };
 
-int main(int, char**) {
+void kosaraju() {
     std::string str;
     std::ifstream file;
 
@@ -112,9 +116,49 @@ void median_maintenance() {
     std::cout << "Prog assignment answer: " << median << std::endl;//1213
 }
 
+void two_sum() {
+    std::string str;
+    std::ifstream file;
+
+    file.open("2sumData.txt");
+
+    HashSet<long> dedup(100000);
+    std::vector<long> arr;
+    long value;
+    while (std::getline(file, str) && !str.empty()) {
+        value = stol(str);
+        if (!dedup.lookup(value)) {
+            arr.push_back(value);
+            dedup.insert(value);
+        }
+    }
+    file.close();
+
+    HashSet<long> hash_set(100);
+    std::sort(arr.begin(), arr.end());
+    int i = 0, j = arr.size() - 1, i2 = 0;
+    long diff = 0;
+    while (arr[i] < arr[j]) {
+        diff = arr[i] + arr[j];
+        if (diff > 10000) j--;
+        else if (diff < -10000) i++;
+        else {
+            i2 = i;
+            while (i2 < j && diff < 10000) {
+                hash_set.insert(diff); 
+                i2++;
+                diff = arr[i2] + arr[j];
+            }
+            j--;
+        }
+    }
+    std::cout << "Prog assing answer:" << hash_set.get_size();
+}
+
 int main(int, char**) {
     //kosaraju();
     //dijkstra();
-    median_maintenance();
+    //median_maintenance();
+    two_sum();
     return 0;
 }
