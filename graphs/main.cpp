@@ -92,8 +92,29 @@ void dijkstra() {
     //3985,5556,4440,5377,4504,3406,2768,4731,4854,1724
 }
 
+void median_maintenance() {
+    std::string str;
+    std::ifstream file;
+
+    MedianMaintainer mm(10000000);
+    int median = 0;
+
+    file.open("median.txt");
+    int i = 0;
+    while (std::getline(file, str) && !str.empty()) {
+        mm.insert(stoi(str));
+        std::cout << "#" << ++i << "\tmedian: " << mm.median() << std::endl;
+        median += mm.median();
+    }
+    file.close();
+
+    median = median % 10000;
+    std::cout << "Prog assignment answer: " << median << std::endl;//1213
+}
 
 int main(int, char**) {
-    dijkstra();
+    //kosaraju();
+    //dijkstra();
+    median_maintenance();
     return 0;
 }
