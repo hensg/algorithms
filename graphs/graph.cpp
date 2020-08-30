@@ -20,6 +20,12 @@ void Graph::add_edge(int a_index, int b_index) {
     if (!_direct_graph)
         vertices[b_index].edges.push_back(a_index);
 };
+void Graph::add_edge_distance(const unsigned int a_index, const unsigned int b_index, const unsigned int distance) {
+    if (b_index >= vertices[a_index].edges_distance.size()) {
+        vertices[a_index].edges_distance.resize(b_index+1);
+    }
+    vertices[a_index].edges_distance[b_index] = distance;
+}
 
 const std::vector<vertex_t>& Graph::get_vertices() {
     return vertices;
@@ -195,6 +201,39 @@ std::vector<connected_components_t> Graph::kosaraju_cc() {
     }
     return cc_vec;
 }
+
+/*
+Slow Dijkstra: O(n*m)
+BFS: O(n+m)
+the diff? BFS explore the vertex only once while the Dijkstra
+re-calculate the distance of all vertex for all edge reference
+*/
+std::vector<int> Graph::dijkstra() {
+    std::vector<int> shorted_path_distances(vertices.size());
+    for (int i = 0; i < shorted_path_distances.size(); i++) {
+        shorted_path_distances[i] = INT32_MAX;
+    }
+    unsigned int tmp_dist = INT32_MAX;
+    std::queue<int> q;
+    q.push(0);
+    shorted_path_distances[0] = 0;
+
+    while (!q.empty()) {
+        for (auto& edge: vertices[q.front()].edges) {
+            tmp_dist = shorted_path_distances[q.front()] + vertices[q.front()].edges_distance[edge];
+            std::cout << "vertex: " << vertices[q.front()].label << ", ";
+            std::cout << "to: " << vertices[edge].label << " - distance: " << tmp_dist << std::endl;
+
+            if (tmp_dist < shorted_path_distances[edge]) {
+                shorted_path_distances[edge] = tmp_dist;
+                q.push(edge);
+            }
+        }
+        q.pop();
+    }
+
+    return shorted_path_distances;
+};
 
 void Graph::print() {
     for (auto& v: vertices) {

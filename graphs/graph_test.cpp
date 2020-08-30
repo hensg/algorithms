@@ -1,5 +1,6 @@
 #include <iostream>
 #include "graph.h"
+#include <cassert>
 
 void test_bfs_distance(Graph& graph) {
     std::string label_to_find = "s";
@@ -97,7 +98,7 @@ void test_topological_sort() {
     for (int i = 0; i < topo.size(); i++) {
         std::cout << i+1 << ":" << g.get_vertices()[topo[i]].label << ", ";
     }
-    assert(g.get_vertices()[topo[10]].label == "8");
+    assert(g.get_vertices()[topo[10]].label == "4");
 }
 
 void test_reverse() {
@@ -172,10 +173,52 @@ void test_kosaraju() {
     assert(cck.size() == 4);
 }
 
+void test_dijkstra() {
+    /*
+        v
+      / | \
+    s   |   t
+      \ | /
+        w
+    
+    */
+    bool direct_graph = true;
+    Graph g(direct_graph);
+    g.add_vertex(vertex{"s"});
+    g.add_vertex(vertex{"v"});
+    g.add_vertex(vertex{"w"});
+    g.add_vertex(vertex{"t"}); 
+    g.add_edge(0,1);//s->v
+    g.add_edge_distance(0,1,1);//s -- distance 1 --> v
+
+    g.add_edge(0,2);//s->w
+    g.add_edge_distance(0,2,3);//s -- distance 3 --> w
+
+    g.add_edge(1,2);//v->w
+    g.add_edge_distance(1,2,1);//v -- distance 1 --> w
+
+    g.add_edge(1,3);//v->t
+    g.add_edge_distance(1,3,6);//v -- distance 6 --> t
+
+    g.add_edge(2,3);//w->t
+    g.add_edge_distance(2,3,3);//w -- distance 3 --> t
+
+    const std::vector<int>& shorted_path_distances = g.dijkstra();
+    for (auto& i: shorted_path_distances) {
+        std::cout << i << ",";
+    }
+    
+    assert(shorted_path_distances[3] == 5); //s -> v -> w -> t = 1 + 1 + 3 = 5
+    assert(shorted_path_distances[2] == 2); //s -> v -> w = 1 + 1 = 2 and not s -- distance 3 --> w
+    assert(shorted_path_distances[1] == 1);
+    assert(shorted_path_distances[0] == 0);
+}
+
 void test_direct_graph() {
     test_topological_sort();
     test_reverse();
     test_kosaraju();
+    test_dijkstra();
 }
 
 int main(int, char**) {

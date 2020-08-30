@@ -7,6 +7,7 @@
 struct vertex {
     std::string label;
     std::vector<int> edges;
+    std::vector<int> edges_distance;
 };
 typedef vertex vertex_t;
 
@@ -30,6 +31,7 @@ public:
     void add_vertex(vertex_t v);
     void insert(const int pos, vertex_t v);
     void add_edge(int a_index, int b_index);
+    void add_edge_distance(const unsigned int a_index, const unsigned int b_index, const unsigned int distance);
     const std::vector<vertex_t>& get_vertices();
     std::vector<std::pair<vertex_t, int>> find_bfs(const unsigned int starting_index, const std::string label);
     std::vector<connected_components_t> undirect_connected_components();
@@ -37,6 +39,7 @@ public:
     std::vector<int> topological_order();
     std::vector<vertex_t> reverse();
     std::vector<connected_components_t> kosaraju_cc();
+    std::vector<int> dijkstra();
     void print();
 };
 
